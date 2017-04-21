@@ -8,7 +8,7 @@ LD	= g++
 os = $(shell uname -s)
 
 ifeq ($(os),Linux)
-CXXFLAGS	= -I$(shell root-config --incdir)
+CXXFLAGS	= -I$(shell root-config --incdir) -std=c++11 -fPIC
 else
 CXXFLAGS	= -O -std=c++11 -fPIC -pipe -Wall -dynamiclib -I$(shell root-config --incdir)
 endif
@@ -25,12 +25,12 @@ endif
 ROOTLIBS	= $(shell root-config --libs)
 LIBS		= $(ROOTLIBS)
 
-INSTALL_DIR	= /usr/local/opt/gsl
+INSTALL_DIR	= /usr/local
 GSL		= $(INSTALL_DIR)
 
 CXXFLAGSGSL 	= $(CXXFLAGS)
 CXXFLAGSGSL 	+= -I$(GSL)/include
-CXXFLAGSROOT 	= -I$(shell root-config --incdir)
+CXXFLAGSROOT 	= -I$(shell root-config --incdir) -std=c++11
 
 LIBSROOT       	= $(ROOTLIBS)
 LIBSGSL	       	= $(LIBS)
@@ -66,10 +66,23 @@ rrd:
 		g++ $(LDFLAGS) rrd.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/rrd
 		rm rrd.o
 
+treeRead:
+		g++ $(CXXFLAGSGSL) $(CXXFLAGSROOT) -c src/treeRead.C
+		g++ $(LDFLAGS) treeRead.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/treeRead
+		rm treeRead.o
+
+TestWriterrd:
+		g++ $(CXXFLAGSGSL) $(CXXFLAGSROOT) -c src/TestWriterrd.C
+		g++ $(LDFLAGS) TestWriterrd.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/TestWriterrd
+		rm TestWriterrd.o
+
 clean :
 		rm -f *.o
 		rm -f *.o dict*.* $(SLIB)
-		rm bin/rrd
+		rm bin/TestWriterrd
+		rm Resonance.root	
 		@echo "All cleaned-up :-)"
+
+#all : bin/treeRead
 
 # DO NOT DELETE

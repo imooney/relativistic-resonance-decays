@@ -1,3 +1,13 @@
+4/21/2017 - Cody Grant
+	Changed the TestWriterrd.C file so that the Event is written to the tree
+	Added the treeRead.C file 
+		It reads trees now! I actually don't know what was fixed, but Kolja fixed it
+		He said it wasn't connected to the library
+		Still more to write if we want to make a histogram or whatever, but it actually reads a tree now
+	Make file was changed a little
+	Added the rootlogon.C to the folder system
+
+
 #relativistic-resonance-decays
 
 Before running anything, make sure your path/environment variables are set correctly. To do this on Mac OSX (no idea how it works on other OS), open your terminal, and type “cd”. This will take you to your home directory. Next, use the text editor of your choice to open .cshrc or .bashrc depending on which shell you’re using (I use csh). Make sure your environments for ROOT, GSL, and our EVENT program are configured, like so:

@@ -25,8 +25,8 @@ Track::Track(double p1, double p2, double p3, double E, int Pid):TLorentzVector(
 }
 
 void Track::Print() {
-    cout << "Track 4 momentum: ( " << Px() << " " << Py() << " " <<
-        Pz() << " " << E() << " )\n";
+    cout << "Track 4 momentum: ( " << Px() << ", " << Py() << ", " <<
+        Pz() << ", " << E() << " )\n";
     cout << "Track pid: " << pid << '\n';
 }
 
@@ -63,7 +63,7 @@ void Event::AddTrack(double p1, double p2, double p3, double E, int Pid) {
 
 void Event::Print() {
     cout << "Event number " << GetEventNumber() << '\n';
-    cout << "Number of tracks in the event: " << GetNumberOfTracks() << '\n';
+    cout << "Number of tracks in the event: " << GetNumberOfTracks() << '\n';;
 }
 
 

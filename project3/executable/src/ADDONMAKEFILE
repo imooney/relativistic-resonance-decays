@@ -1,4 +1,0 @@
-Testwriterrd:
-		g++ $(CXXFLAGSGSL) $(CXXFLAGSROOT) -c src/TestWriterrd.C
-		g++ $(LDFLAGS) TestWriterrd.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/TestWriterrd
-		rm TestWriterrd.o

@@ -66,10 +66,15 @@ treeRead:
 		g++ $(LDFLAGS) treeRead.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/treeRead
 		rm treeRead.o
 
-writerrd:
-		g++ $(CXXFLAGSGSL) $(CXXFLAGSROOT) -c src/writerrd.C
-		g++ $(LDFLAGS) writerrd.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/writerrd
-		rm writerrd.o
+eventgen:
+		g++ $(CXXFLAGSGSL) $(CXXFLAGSROOT) -c src/eventgen.C
+		g++ $(LDFLAGS) eventgen.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/eventgen
+		rm eventgen.o
+
+distgen:
+		g++ $(CXXFLAGSGSL) $(CXXFLAGSROOT) -c src/distgen.C
+		g++ $(LDFLAGS) distgen.o $(LIBSGSL) $(LIBSROOT) -L./ -lEvent -o bin/distgen
+		rm distgen.o
 
 clean :
 		rm -f *.o

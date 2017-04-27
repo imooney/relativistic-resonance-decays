@@ -13,7 +13,7 @@
 class Track : public TLorentzVector {
     //setters, getters, and boost inherited from TLorentzVector
 private:
-    int pid; // p = +1 for proton, pi- = -2 (sign for charge, number for particle)
+    int pid; // p = +1 for proton, pi- = -2, lambda = 0 (sign for charge, number for particle)
     
 public:
     //constructors and destructor

@@ -7,12 +7,14 @@
 #include "TStyle.h"
 #include <iostream>
 #include "TRandom3.h"
+#include "TMath.h"
+#include <chrono>
 
 using namespace std;
 
 //Globals
 const Double_t Ebeam        = 200.0;        //GeV
-const Double_t Gamma        = 2.631e-10     //seconds
+const Double_t Gamma        = 2.631e-10;    //seconds
 const Double_t PI = 4.0*atan(1);
 
 //Things to do:

@@ -1,5 +1,4 @@
 //  distgen.C
-//  Created by Isaac Mooney on 4/27/17.
 
 #include "TROOT.h"
 #include "TTree.h"
@@ -9,21 +8,23 @@
 #include "TRandom3.h"
 #include "TH1.h"
 #include "TH2.h"
-#include <chrono>
 
 using namespace std;
 
 //Globals
-const Double_t Ebeam        = 200.0;        //GeV
 const Double_t Gamma        = 3.913623e-15; //GeV
-const Double_t mLambda      = 1.115683;     //GeV
-const Double_t pT           = 1.0;          //GeV
+Double_t mLambda            = 1.115683;     //GeV
+Double_t pT                 = 1.0;          //GeV
 
 const Double_t PI = 4.0*atan(1);
 
-int main() {
+int main(int argc, char** argv) {
     //TH1::SetDefaultSumw2();
     //TH2::SetDefaultSumw2();
+    if (argc != 1) {
+        pT = atof(argv[1]);
+        mLambda = atof(argv[2]);
+    }
     
     //create file and tree for the distributions
     TFile *sampledists = new TFile("sampledists.root", "RECREATE");
@@ -45,17 +46,17 @@ int main() {
     mass_rand->SetSeed(42);
     pt_rand->SetSeed(10);
     
-    treerand->Branch("phi",     &phi);
-    treerand->Branch("theta",   &theta);
-    treerand->Branch("mass",    &mass);
-    treerand->Branch("pt",      &pt);
+    treerand->Branch("phi",         &phi);
+    treerand->Branch("theta",       &theta);
+    treerand->Branch("mass",        &mass);
+    treerand->Branch("pt",          &pt);
     
     //fill distributions, write to tree
     for(int i = 0; i < 1000000; ++ i) {
         phi = phi_rand->Uniform(0, 2*PI);
         theta = theta_rand->Uniform(0, PI);
         mass = mass_rand->BreitWigner(mLambda, Gamma);
-        pt = pt_rand->Exp(1);
+        pt = pt_rand->Exp(pT);
         treerand->Fill();
     }
     

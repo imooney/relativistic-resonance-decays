@@ -1,5 +1,4 @@
 //  eventgen.C (relativistic resonance decay)
-//  Created by Isaac Mooney on 4/12/17.
 
 #include "../Event.h"
 #include "TROOT.h"
@@ -18,25 +17,20 @@
 using namespace std;
 
 //Globals
-const Double_t Ebeam        = 200.0;        //GeV
+Double_t Ebeam              = 200.0;        //GeV
 const Double_t mProton      = 0.9382720813; //GeV
 const Double_t mPion        = 0.13957018;   //GeV
 
 const Double_t PI           = 4.0*atan(1);
 
-const Double_t num_events   = 10000;
-
-//Things to do:
-//      4) Gaussian smearing of final pTs.
-//      5) Generalize away from mid-rapidity?
+const Double_t num_events   = 100000;
 
 Event* Decay(vector<Double_t> sampledret, Int_t evNum) {
-    //STARTING WITH PROTON-PION DECAY - GENERALIZE LATER
     //Lab frame
-    //cout << "Mass of Lambda: " << sampledret[3] << '\n';
-    Double_t momLambda = sampledret[2];// = pT, since at mid-rapidity
+    Double_t momLambda = sampledret[2];
     Double_t ELambda = sqrt(pow(momLambda,2) + pow(sampledret[3],2));
-    //should we assume it's only along this direction?
+
+    //taking our axis to be x
     Double_t pxL = momLambda;
     Double_t pyL = 0;
     Double_t pzL = 0;
@@ -60,20 +54,20 @@ Event* Decay(vector<Double_t> sampledret, Int_t evNum) {
     event->SetEventNumber(evNum);
     event->AddTrack(trackprot);
     event->AddTrack(trackpion);
-    //event->Print();
-    //cout << "Before boost: " << '\n';
-    //tracklambda->Print();
-    //cout << "Decays into: " << '\n';
-    //trackprot->Print();
-    //trackpion->Print();
+    event->Print();
+    cout << "Before boost: " << '\n';
+    tracklambda->Print();
+    cout << "Decays into: " << '\n';
+    trackprot->Print();
+    trackpion->Print();
     
     trackprot->Boost(pxL/ELambda,pyL/ELambda,pzL/ELambda);
     trackpion->Boost(pxL/ELambda,pyL/ELambda,pzL/ELambda);
     //Momentum & energy of the boosted tracks sum to the lambda momentum & energy. Good check.
     
-    //cout << "After boost: " << '\n';
-    //trackprot->Print();
-    //trackpion->Print();
+    cout << "After boost: " << '\n';
+    trackprot->Print();
+    trackpion->Print();
     
     return event;
 }
@@ -87,13 +81,13 @@ vector<Double_t> sample(const unsigned index, TTree* samples) {
     samples->SetBranchAddress("pt", &ptloc);
     samples->SetBranchAddress("mass", &massloc);
     //index corresponds to current event number, so kinematics change for each event
-    //cout << (rand())%(samples->GetEntries()) << endl;
     samples->GetEntry((rand())%(samples->GetEntries()));
     //add these numbers to the kinematics vector
     vector<Double_t> sampled = {philoc, thetaloc, ptloc, massloc};
     return sampled;
 }
 
+//adds uncorrelated background to the event
 void background(vector<Double_t> sampledret, Event *eventtest, Double_t Elambda) {
     Double_t Etot   = Ebeam - Elambda;
     Double_t Epart  = -1, Mpart = -1, Ppart = -1, px = -1, py = -1, pz = -1;
@@ -120,9 +114,14 @@ void background(vector<Double_t> sampledret, Event *eventtest, Double_t Elambda)
     return;
 }
 
-int main() {
+//generates events and decays the lambdas
+int main(int argc, char** argv) {
+    if (argc != 1) {
+        Ebeam = atof(argv[1]);
+    }
     //TH1::SetDefaultSumw2();
     //TH2::SetDefaultSumw2();
+    
     //open sample distributions file and get tree; create file & tree of events
     TFile *f = new TFile("Resonance.root","recreate");
     TTree *t1 = new TTree("t1","Test 1");
@@ -135,7 +134,7 @@ int main() {
     t1->Branch("Event",&eventtest);     t1->Branch("phi", &phifinal);
     t1->Branch("theta", &thetafinal);   t1->Branch("pt", &ptfinal);
     t1->Branch("mass", &massfinal);
-    t1->Branch("mtest", &mtest); t1->Branch("etest", &etest);
+    t1->Branch("mtest", &mtest);        t1->Branch("etest", &etest);
     //initialize vector for sampled kinematics
     vector<Double_t> sampledret = {-1, -1, -1, -1};
 
